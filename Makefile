@@ -1,0 +1,2 @@
+delpoy:
+	./test.sh

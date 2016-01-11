@@ -1,7 +1,7 @@
 #!/usr/bin/python
+#coding=utf8
 
-from threading import current_thread
-from bottle import Bottle, run, DictProperty
+from bottle import Bottle, run, DictProperty, request
 
 app = Bottle()
 catchall = DictProperty('config', 'catchall')
@@ -11,14 +11,15 @@ print(dir(catchall))
 print(catchall.__dict__)
 print('========')
 
-@app.route(path='/hello', method=['GET'], )
+@app.route(path='/hello', method=['POST'], )
 def hello():
-    return "Hello World!"
+    arg = request.forms.get('name', 'piao')
+    return "Hello %s!"%(arg)
 
 def hellos():
     return "Hello Worlds!"
 app.route(path='/hellos', method=['GET'], callback=hellos)
 
 if __name__ == '__main__':
-    run(app, host='localhost', port=8080, reloader=True)
+    run(app, host='0.0.0.0', port=10000, reloader=True)
 
