@@ -1,2 +1,2 @@
 delpoy:
-	./test.sh
+	./init.sh
