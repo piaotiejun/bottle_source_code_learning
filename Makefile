@@ -1,2 +1,0 @@
-delpoy:
-	./init.sh
