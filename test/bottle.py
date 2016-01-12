@@ -426,8 +426,8 @@ class Router(object):
 
     def match(self, environ):
         ''' Return a (target, url_agrs) tuple or raise HTTPError(400/404/405). '''
-        verb = environ['REQUEST_METHOD'].upper()
-        path = environ['PATH_INFO'] or '/'
+        verb = environ['REQUEST_METHOD'].upper() # HTTP方法
+        path = environ['PATH_INFO'] or '/' # url path
         target = None
         if verb == 'HEAD':
             methods = ['PROXY', verb, 'GET', 'ANY']
@@ -442,7 +442,6 @@ class Router(object):
                 target, getargs = self.static[method][path]
                 return target, getargs(path) if getargs else {}
             elif method in self.dyna_regexes:
-                #print('\nin routers match dyna_regexes\n')
                 for combined, rules in self.dyna_regexes[method]:
                     match = combined(path)
                     if match:
@@ -821,12 +820,14 @@ class Bottle(object):
             Any additional keyword arguments are stored as route-specific
             configuration and passed to plugins (see :meth:`Plugin.apply`).
         """
-        if callable(path): path, callback = None, path
+        if callable(path):
+            path, callback = None, path
         plugins = makelist(apply)
         skiplist = makelist(skip)
         def decorator(callback):
             # TODO: Documentation and tests
-            if isinstance(callback, basestring): callback = load(callback)
+            if isinstance(callback, basestring):
+                callback = load(callback)
             for rule in makelist(path) or yieldroutes(callback):
                 for verb in makelist(method):
                     verb = verb.upper()
@@ -872,15 +873,8 @@ class Bottle(object):
 
         try:
             environ['bottle.app'] = self
-            print('in _handle============')
-            print(request)
-            print(type(request))
-            print(id(request))
-            print(response)
-            print(type(response))
-            print('end===========')
             request.bind(environ) # 将environ传递给BaseRequest
-            response.bind()
+            response.bind() # TODO
             try:
                 self.trigger_hook('before_request')
                 route, args = self.router.match(environ)
@@ -989,7 +983,8 @@ class Bottle(object):
         except (KeyboardInterrupt, SystemExit, MemoryError):
             raise
         except Exception:
-            if not self.catchall: raise
+            if not self.catchall:
+                raise
             err = '<h1>Critical error while processing request: %s</h1>' \
                   % html_escape(environ.get('PATH_INFO', '/'))
             if DEBUG:
